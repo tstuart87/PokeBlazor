@@ -1,0 +1,86 @@
+﻿@inject IPokeController PokeController
+@page "/pokedex/{name}"
+@page "/pokedex"
+
+<form class="form-inline">
+    <div class="form-group mb-2">
+        <input type="text" style="width: 11rem; margin-right: 1rem;" @bind-value="@searchText" class="form-control" id="" placeholder="Search Pokemon.">
+    </div>
+    <button type="button" style="width: 6rem" class="btn btn-primary mb-2" @onclick="@GetPokemonAsync">Find</button>
+</form>
+
+@if (Pokemon == null)
+{
+    <p>Nothing to Display</p>
+}
+else
+{
+    <div class="card" style="height: 28rem; width: 18rem; margin: 1rem 0 1rem 0;">
+        <img style="padding: 1rem; max-height: 18rem; width: auto;" src="https://img.pokemondb.net/artwork/large/@(Pokemon.Name).jpg" class="card-img-top" alt="@Pokemon.Name">
+        <div class="card-body">
+            <h3 class="card-title">@Pokemon.Name.ToUpper()</h3>
+            <h6>Height: @Pokemon.Height</h6>
+            <h6>Weight: @Pokemon.Weight</h6>
+            <h6>XP: @Pokemon.Experience</h6>
+        </div>
+    </div>
+
+    <form class="form-inline">
+        <button type="button" style="width: 8rem; margin-right: 2rem" class="btn btn-primary mb-2" @onclick="@GetPrevPokemonAsync">Prev</button>
+        <button type="button" style="width: 8rem" class="btn btn-primary mb-2" @onclick="@GetNextPokemonAsync">Next</button>
+    </form>
+}
+
+@code {
+
+    [Parameter]
+    public string name { get; set; }
+    public Pokemon Pokemon { get; set; }
+    public string searchText;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Pokemon = await PokeController.GetPokemon(name);
+    }
+
+    protected async Task GetPokemonAsync()
+    {
+        Pokemon = await PokeController.GetPokemon(searchText);
+    }
+
+    protected async Task GetPrevPokemonAsync()
+    {
+        Pokemon = await PokeController.GetPokemon(SetPreviousId());
+    }
+
+    protected async Task GetNextPokemonAsync()
+    {
+        Pokemon = await PokeController.GetPokemon(SetNextId());
+    }
+
+    private string SetPreviousId()
+    {
+        string id = (Pokemon.Id - 1).ToString();
+
+        if (id == "0")
+        {
+            return "1";
+        }
+
+        return id;
+    }
+
+    private string SetNextId()
+    {
+        string id = (Pokemon.Id + 1).ToString();
+
+        if (id == "0")
+        {
+            return "1";
+        }
+
+        return id;
+    }
+}
+

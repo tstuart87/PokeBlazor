@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Havit.Blazor.Components.Web;
+using Havit.Blazor.Components.Web.Bootstrap;
 
 namespace PokeBlazor
 {
@@ -18,7 +20,10 @@ namespace PokeBlazor
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://pokeapi.co/api/v2/") });
+            
             builder.Services.AddScoped<IPokeController, PokeController>();
+
+            builder.Services.AddHxServices();
 
             await builder.Build().RunAsync();
         }

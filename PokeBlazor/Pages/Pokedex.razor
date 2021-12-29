@@ -9,6 +9,18 @@
     <button type="button" style="width: 6rem" class="btn btn-primary mb-2" @onclick="@GetPokemonAsync">Find</button>
 </form>
 
+
+<HxContextMenu>
+    <HxContextMenuItem OnClick="() => SetMessage(1)">
+        Item 1
+    </HxContextMenuItem>
+    <HxContextMenuItem OnClick="() => SetMessage(2)">
+        Item 2
+    </HxContextMenuItem>
+</HxContextMenu>
+
+
+
 @if (Pokemon == null)
 {
     <p>Nothing to Display</p>
@@ -81,6 +93,13 @@ else
         }
 
         return id;
+    }
+
+    private string message;
+
+    private void SetMessage(int item)
+    {
+        message = $"Item number {item} has been selected";
     }
 }
 
